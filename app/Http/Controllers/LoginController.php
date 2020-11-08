@@ -8,8 +8,8 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-	protected $maxAttempts = 10; // Default is 5
-    protected $decayMinutes = 10; // Default is 1
+	protected $maxAttempts = 100; // Default is 5
+    protected $decayMinutes = 100; // Default is 1
 
     public function login(Request $request)
     {
