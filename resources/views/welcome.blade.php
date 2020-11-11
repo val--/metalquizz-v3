@@ -22,7 +22,7 @@
 		</v-navigation-drawer>
 
 		<v-app-bar app>
-			Bienvenue !
+			
 		</v-app-bar>
 
 		<v-main>

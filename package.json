@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "vue-router": "^3.4.9",
+        "vuelidate": "^0.7.6",
         "vuetify": "^2.3.16"
     }
 }
