@@ -6,7 +6,10 @@
 
 require('./bootstrap');
 
+import Menubar from './components/Menubar.vue';
+
 import vuetify from './plugins/vuetify';
+import store from './store';
 
 window.Vue = require('vue');
 import VueRouter from 'vue-router';
@@ -17,5 +20,12 @@ Vue.use(VueRouter);
 const app = new Vue({
     el: '#app',
     vuetify,
-    router: new VueRouter(routes)
+    store,
+    router: new VueRouter(routes),
+    components: {
+    	Menubar
+    },
+    beforeCreate() {
+        this.$store.dispatch("updateLoggedUser");
+    }
 });

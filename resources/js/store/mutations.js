@@ -1,5 +1,10 @@
 export default {
-	LOAD_USER(state, value) {
-		state.loggedUser = value
+	UPDATE_LOGGED_USER(state, value) {
+		state.user = value;
+		state.isLoggedIn = value ? true : false;
+	},
+	LOGOUT_USER(state, value) {
+		state.user = {};
+		state.isLoggedIn = false;
 	}
 }

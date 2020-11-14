@@ -1,56 +1,59 @@
 <template>
-    <div>
-        <v-card width="600" class="mx-auto mt-5">
-            <v-card-title>
-                <h1>Inscription</h1>
-            </v-card-title>
-            <v-card-text>
-                <v-form>
-                    <v-text-field 
-                        v-model="name" 
-                        label="Votre pseudonyme"
-                        :error-messages="nameErrors"
-                        prepend-icon="mdi-account-circle"
-                        @blur="$v.name.$touch()"
-                        required
-                    />
-                    <v-text-field 
-                        v-model="email" 
-                        label="Votre adresse e-mail"
-                        :error-messages="emailErrors"
-                        prepend-icon="mdi-mail"
-                        @blur="$v.email.$touch()"
-                        required
-                    />
-                    <v-text-field 
-                        v-model="password" 
-                        label="Mot de passe"
-                        :error-messages="passwordErrors"
-                        prepend-icon="mdi-lock" 
-                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
-                        type="password" 
-                        :type="showPassword ? 'text' : 'password'" 
-                        @click:append="showPassword = !showPassword"
-                        required
-                    />
-                    <v-text-field
-                        v-model="confirmPassword"
-                        :type="showPassword ? 'text' : 'password'"
-                        :error-messages="confirmPasswordErrors"
-                        label="Confirmation du mot de passe"
-                        required
-                        @blur="$v.confirmPassword.$touch()"
-                        prepend-icon="mdi-lock"
-                        @click:append="showPassword = !showPassword"
-                    />
-                </v-form>
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-                <v-btn @click="registerUser" color="success">S'inscrire</v-btn>
-            </v-card-actions>
-        </v-card>
-    </div>
+    <v-row>
+        <v-col class="ma-12">
+            <h1>Inscription</h1>
+            <form>
+                <v-text-field 
+                    v-model="name" 
+                    label="Votre pseudonyme"
+                    :error-messages="nameErrors"
+                    prepend-icon="mdi-account-circle"
+                    @blur="$v.name.$touch()"
+                    required
+                />
+                <v-text-field 
+                    v-model="email" 
+                    label="Votre adresse e-mail"
+                    :error-messages="emailErrors"
+                    prepend-icon="mdi-mail"
+                    @blur="$v.email.$touch()"
+                    required
+                />
+                <v-text-field 
+                    v-model="password" 
+                    label="Mot de passe"
+                    :error-messages="passwordErrors"
+                    prepend-icon="mdi-lock" 
+                    :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" 
+                    type="password" 
+                    :type="showPassword ? 'text' : 'password'" 
+                    @click:append="showPassword = !showPassword"
+                    required
+                />
+                <v-text-field
+                    v-model="password_confirmation"
+                    :type="showPassword ? 'text' : 'password'"
+                    :error-messages="passwordConfirmationErrors"
+                    label="Confirmation du mot de passe"
+                    required
+                    @blur="$v.password_confirmation.$touch()"
+                    prepend-icon="mdi-lock"
+                    @click:append="showPassword = !showPassword"
+                />
+                <v-file-input label="Photo de profil" />
+                <v-btn 
+                    @click.prevent="registerUser" 
+                    color="primary"
+                    :loading="submitting"
+                    class="mt-6"
+                >
+                S'inscrire
+                </v-btn>
+            </form>
+
+
+        </v-col>
+    </v-row>
 </template>
 
 <script>
@@ -66,25 +69,53 @@ export default {
             name: '',
             email: '',
             password:'',
-            confirmPassword:'',
-            showPassword : false
+            password_confirmation:'',
+            showPassword : false,
+            submitting : false
         }
     },
     methods:{
         registerUser(){
-            this.$v.$touch;
-            /*axios.post('/api/register', this.form).then(() =>{
-                console.log('saved');
-            }).catch((error) =>{
-                this.errors = error.response.data.errors;
-            })*/
+            this.$v.$touch();
+            if(!this.$v.$invalid){
+                this.submitting = true;
+                let vm = this;
+                let postData = new FormData();
+                postData.append('name', this.name);
+                postData.append('email', this.email);
+                postData.append('password', this.password);
+                postData.append('password_confirmation', this.password_confirmation);
+                axios.post('/api/register', postData).then((response) =>{
+                    this.handleLogin(postData); // Let's log user if registration was ok
+                })
+                .finally((e) => {
+                    this.submitting = false;
+                })
+                .catch((error) =>{
+                    this.errors = error.response.data.errors;
+                })
+            }else{
+                console.log(this.$v.name);
+            }
+        },
+        handleLogin(data){
+            axios.get('/sanctum/csrf-cookie').then(response => {
+                let postData = new FormData();
+                postData.append('email', vm.email);
+                postData.append('password', vm.password);
+                axios.post('/api/login', data).then(() =>{
+                     this.$router.push({ name: "Dashboard"}); 
+                 }).catch((error) =>{
+                    console.log(error);
+                })
+            });
         }
     },
     validations : {
         name : { required },
         email : { required, email },
         password : { required },
-        confirmPassword: { sameAsPassword: sameAs("password") }
+        password_confirmation: { required, sameAsPassword: sameAs("password") }
     },
     computed: {
         nameErrors () {
@@ -106,11 +137,11 @@ export default {
             !this.$v.password.required && errors.push('Vous devez saisir un mot de passe.');
             return errors;
         },
-        confirmPasswordErrors() {
+        passwordConfirmationErrors() {
             const errors = []; // confirm password ok -> empty errors
-            if (!this.$v.confirmPassword.$dirty) return errors;
-            !this.$v.confirmPassword.sameAsPassword &&
-            errors.push("Les deux mots de passe doivent correspondre.");
+            if (!this.$v.password_confirmation.$dirty) return errors;
+            !this.$v.password_confirmation.sameAsPassword && errors.push("Les deux mots de passe doivent correspondre.");
+            !this.$v.password_confirmation.required && errors.push("Vous devez saisir une seconde fois votre mot de passe.");
             return errors;
         }
     }

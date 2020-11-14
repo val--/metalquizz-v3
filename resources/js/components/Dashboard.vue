@@ -1,19 +1,20 @@
 <template>
     <div>
-        Dashboard <br>
-        <div v-if="user">
-        Name: {{user.name}} <br>
-        Email: {{user.email}}<br><br>
-        <button @click.prevent="logout">Logout</button>
-        </div>
-
+        <h1>Tableau de bord</h1>
+        <v-row>
+            <v-col>
+                {{ this.$store.state.user }}
+                <button @click.prevent="logout">Logout</button>
+            </v-col>
+        </v-row>
     </div>
 </template>
+
 <script>
 export default {
     data(){
         return{
-            user: null
+
         }
     },
     methods:{
@@ -22,11 +23,6 @@ export default {
                 this.$router.push({ name: "Home"})
             })
         }
-    },
-    mounted(){
-        axios.get('/api/user').then((res)=>{
-            this.user = res.data
-        })
     }
 }
 </script>

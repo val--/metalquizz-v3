@@ -4,6 +4,7 @@ import NotFound from './components/NotFound';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
+import Quiz from './components/Quiz.vue';
 
 export default{
     mode: 'history',
@@ -43,6 +44,20 @@ export default{
 					return next({ name: 'Login'})
 				})
 			}
+       
+        },
+        {
+            path: "/quiz",
+            name: "Quiz",
+            component: Quiz,
+            beforeEnter: (to, form, next) =>{
+                axios.get('/api/authenticated').then(()=>{
+                    next()
+                }).catch((error)=>{
+                    console.log(error);
+                    return next({ name: 'Login'})
+                })
+            }
        
           }
           
