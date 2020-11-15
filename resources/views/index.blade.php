@@ -8,7 +8,11 @@
 		<!-- Main content -->
 		<v-main>
 			<v-container>
-				<router-view></router-view>
+				<v-row>
+        			<v-col>
+						<router-view></router-view>
+					</v-col>
+				</v-row>
 			</v-container>
 		</v-main>
 

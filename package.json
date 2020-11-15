@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "vue-circular-count-down-timer": "github:ciki-parzival/vue-circular-count-down-timer",
         "vue-router": "^3.4.9",
         "vuelidate": "^0.7.6",
         "vuetify": "^2.3.16",

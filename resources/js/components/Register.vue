@@ -1,7 +1,7 @@
 <template>
-    <v-row>
-        <v-col class="ma-12">
-            <h1>Inscription</h1>
+    <v-card width="600" class="mx-auto">
+        <v-card-title>Inscription</v-card-title>
+        <v-card-text>
             <form>
                 <v-text-field 
                     v-model="name" 
@@ -41,6 +41,7 @@
                     @click:append="showPassword = !showPassword"
                 />
                 <v-file-input label="Photo de profil" />
+                <v-divider></v-divider>
                 <v-btn 
                     @click.prevent="registerUser" 
                     color="primary"
@@ -50,10 +51,8 @@
                 S'inscrire
                 </v-btn>
             </form>
-
-
-        </v-col>
-    </v-row>
+        </v-card-text>
+    </v-card>
 </template>
 
 <script>

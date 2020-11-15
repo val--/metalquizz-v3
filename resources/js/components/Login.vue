@@ -1,7 +1,7 @@
 <template>
-    <v-row>
-        <v-col class="ma-12">
-            <h1>Connexion</h1>
+    <v-card width="600" class="mx-auto">
+        <v-card-title>Connexion</v-card-title>
+        <v-card-text>
             <v-form>
                 <v-text-field 
                     v-model="email" 
@@ -31,8 +31,8 @@
                 >
             Connexion
             </v-btn>
-        </v-col>
-    </v-row>
+        </v-card-text>
+    </v-card>
 </template>
 
 <script>
