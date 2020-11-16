@@ -113,13 +113,13 @@ export default {
         },
         // TODO - déplacer, à utiliser globalement
         handleLogin(data){
-            let vm = this;
+            let postData = new FormData();
+            postData.append('email', this.email);
+            postData.append('password', this.password);
             axios.get('/sanctum/csrf-cookie').then(response => {
-                let postData = new FormData();
-                postData.append('email', vm.email);
-                postData.append('password', vm.password);
-                axios.post('/api/login', data).then(() =>{
-                     this.$router.push({ name: "Dashboard"}); 
+                axios.post('/api/login', postData).then(() =>{
+                    this.$store.dispatch("updateLoggedUser");
+                    this.$router.push({ name: "Dashboard"}); 
                  }).catch((error) =>{
                     console.log(error);
                 })

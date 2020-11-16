@@ -16,8 +16,6 @@ class RegisterController extends Controller
 		    'password' => ['required'],
 		]);
 
-		var_dump($request); die();
-
 		// Creating the user
 		User::create([
 		    'name' => $request->name,

@@ -2325,12 +2325,13 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuelidate__WEBPACK_IMPORTED_MODUL
     handleLogin: function handleLogin(data) {
       var _this2 = this;
 
-      var vm = this;
+      var postData = new FormData();
+      postData.append('email', this.email);
+      postData.append('password', this.password);
       axios.get('/sanctum/csrf-cookie').then(function (response) {
-        var postData = new FormData();
-        postData.append('email', vm.email);
-        postData.append('password', vm.password);
-        axios.post('/api/login', data).then(function () {
+        axios.post('/api/login', postData).then(function () {
+          _this2.$store.dispatch("updateLoggedUser");
+
           _this2.$router.push({
             name: "Dashboard"
           });
