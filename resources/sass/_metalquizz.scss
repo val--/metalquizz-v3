@@ -1,0 +1,37 @@
+@font-face {
+    font-family: Glaive;
+    src: url('/fonts/glaive.woff');
+}
+
+.v-main {
+	background-image: url('/images/backgrounds/dinpattern-stripe.gif');
+	background-repeat: repeat; 
+	#background-color: black;
+
+}
+.app-title {
+	font-family: 'Glaive' !important;
+	font-size:32px !important;
+	color:#fff !important;
+	text-decoration: none;
+}
+
+.v-card {
+	
+}
+
+.v-footer {
+	border-top:2px solid white !important;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.2s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0
+}

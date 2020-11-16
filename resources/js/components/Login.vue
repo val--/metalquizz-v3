@@ -1,14 +1,16 @@
 <template>
     <v-card width="600" class="mx-auto">
-        <v-card-title>Connexion</v-card-title>
+        <v-card-title>On se connaît ?</v-card-title>
+        <v-divider></v-divider>
         <v-card-text>
-            <v-form>
+            <form>
                 <v-text-field 
                     v-model="email" 
                     label="Votre adresse e-mail"
                     :error-messages="emailErrors"
                     prepend-icon="mdi-mail"
                     @blur="$v.email.$touch()"
+                    color="#fff"
                     required
                 />
                 <v-text-field 
@@ -20,17 +22,27 @@
                     type="password" 
                     :type="showPassword ? 'text' : 'password'" 
                     @click:append="showPassword = !showPassword"
+                    color="#fff"
                     required
                 />
-            </v-form>
-            <v-divider></v-divider>
-            <v-btn 
-                @click="loginUser" 
-                color="primary"
-                :loading="submitting"
-                >
-            Connexion
-            </v-btn>
+                <v-btn 
+                    block
+                    @click="loginUser" 
+                    color="primary"
+                    :loading="submitting"
+                    class="mt-6"
+                    >
+                Connexion
+                </v-btn>
+                <v-btn 
+                    block
+                    to="/register"
+                    color="secondary"
+                    class="mt-4"
+                    >
+                Pas encore inscrit ?
+                </v-btn>
+            </form>
         </v-card-text>
     </v-card>
 </template>

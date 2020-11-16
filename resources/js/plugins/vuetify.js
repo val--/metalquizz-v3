@@ -14,8 +14,7 @@ const opts = {
 
 			},
 			dark : {
-				primary : '#34495E',
-				color : '#fff'
+				primary : '#931621',
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-	<v-app>
+	<v-app style="background: rgba(0,0,0,0);">
 
 		<!-- Menu -->
 		<menubar></menubar>
@@ -8,16 +8,14 @@
 		<!-- Main content -->
 		<v-main>
 			<v-container>
-				<v-row>
-        			<v-col>
-						<router-view></router-view>
-					</v-col>
-				</v-row>
+				<transition name="fade" mode="out-in">
+					<router-view></router-view>
+				</transition>
 			</v-container>
 		</v-main>
 
 		<!-- Footer -->
-		<v-footer app color="primary">
+		<v-footer app>
 			<v-row justify="center">
 				<v-col class="text-center" cols="12">2020 — <strong>Metalquizz</strong></v-col>
 			</v-row>

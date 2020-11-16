@@ -1,6 +1,7 @@
 <template>
     <v-card width="600" class="mx-auto">
-        <v-card-title>Inscription</v-card-title>
+        <v-card-title>Rejoignez-nous !</v-card-title>
+        <v-divider></v-divider>
         <v-card-text>
             <form>
                 <v-text-field 
@@ -9,6 +10,7 @@
                     :error-messages="nameErrors"
                     prepend-icon="mdi-account-circle"
                     @blur="$v.name.$touch()"
+                    color="#fff"
                     required
                 />
                 <v-text-field 
@@ -17,6 +19,7 @@
                     :error-messages="emailErrors"
                     prepend-icon="mdi-mail"
                     @blur="$v.email.$touch()"
+                    color="#fff"
                     required
                 />
                 <v-text-field 
@@ -28,6 +31,7 @@
                     type="password" 
                     :type="showPassword ? 'text' : 'password'" 
                     @click:append="showPassword = !showPassword"
+                    color="#fff"
                     required
                 />
                 <v-text-field
@@ -38,17 +42,26 @@
                     required
                     @blur="$v.password_confirmation.$touch()"
                     prepend-icon="mdi-lock"
+                    color="#fff"
                     @click:append="showPassword = !showPassword"
                 />
-                <v-file-input label="Photo de profil" />
-                <v-divider></v-divider>
+                <!--<v-file-input label="Photo de profil" color="#fff" />-->
                 <v-btn 
+                    block
                     @click.prevent="registerUser" 
                     color="primary"
                     :loading="submitting"
                     class="mt-6"
                 >
                 S'inscrire
+                </v-btn>
+                <v-btn 
+                    block
+                    to="/login"
+                    color="secondary"
+                    class="mt-4"
+                >
+                Déjà inscrit ?
                 </v-btn>
             </form>
         </v-card-text>
@@ -83,21 +96,24 @@ export default {
                 postData.append('name', this.name);
                 postData.append('email', this.email);
                 postData.append('password', this.password);
-                postData.append('password_confirmation', this.password_confirmation);
-                axios.post('/api/register', postData).then((response) =>{
-                    this.handleLogin(postData); // Let's log user if registration was ok
-                })
-                .finally((e) => {
-                    this.submitting = false;
-                })
-                .catch((error) =>{
-                    this.errors = error.response.data.errors;
-                })
+                axios.get('/sanctum/csrf-cookie').then(response => {
+                    axios.post('/api/register', postData).then((response) =>{
+                        this.handleLogin(postData); // Let's log user if registration was ok
+                    })
+                    .finally((e) => {
+                        this.submitting = false;
+                    })
+                    .catch((error) =>{
+                        this.errors = error.response.data.errors;
+                    })
+                });
             }else{
                 console.log(this.$v.name);
             }
         },
+        // TODO - déplacer, à utiliser globalement
         handleLogin(data){
+            let vm = this;
             axios.get('/sanctum/csrf-cookie').then(response => {
                 let postData = new FormData();
                 postData.append('email', vm.email);
