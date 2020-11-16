@@ -16,10 +16,6 @@
 				<v-btn text @click.prevent='logout' class="ma-2" v-if="this.$store.state.isLoggedIn"><v-icon>mdi-logout-variant</v-icon></v-btn>
 			</v-col>
 		</v-row>
-
-		
-
-
 	</v-app-bar>
 </template>
 
