@@ -2214,6 +2214,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2224,7 +2232,8 @@ __webpack_require__.r(__webpack_exports__);
       countdownValue: 0,
       maxCountdownValue: 20,
       countDownTicks: 100 / 20,
-      secondsLeft: 20
+      secondsLeft: 20,
+      answerConfirmationFeedback: null
     };
   },
   created: function created() {
@@ -2252,8 +2261,13 @@ __webpack_require__.r(__webpack_exports__);
     countdownTick: function countdownTick() {
       var _this2 = this;
 
+      var vm = this;
       this.interval = setInterval(function () {
         if (_this2.secondsLeft > 0) {
+          if (vm.answerConfirmationFeedback) {
+            vm.answerConfirmationFeedback = null;
+          }
+
           _this2.countdownValue += _this2.countDownTicks;
           _this2.secondsLeft--;
         }
@@ -2263,6 +2277,7 @@ __webpack_require__.r(__webpack_exports__);
       this.currentQuestionIndex++;
       clearInterval(this.interval);
       this.countdownValue = 0;
+      this.answerConfirmationFeedback = 'OK';
       this.secondsLeft = this.maxCountdownValue;
       this.countdownTick();
     }
@@ -2273,7 +2288,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     progressColor: function progressColor() {
       if (this.secondsLeft > this.maxCountdownValue / 4) {
-        return 'green';
+        return 'white';
       } else {
         return 'primary';
       }
@@ -2497,7 +2512,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".questions-container ul[data-v-654966c0] {\n  list-style-type: none;\n}", ""]);
+exports.push([module.i, ".questions-container[data-v-654966c0] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.questions-container .questions[data-v-654966c0] {\n  width: 920px;\n}\n.questions-container .questions ul[data-v-654966c0] {\n  list-style-type: none;\n}", ""]);
 
 // exports
 
@@ -21210,82 +21225,97 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "v-card",
-    { staticClass: "questions-container d-flex justify-center pa-6" },
+    "div",
+    { staticClass: "questions-container" },
     [
-      _vm.questions
-        ? _c(
-            "div",
-            [
-              _c(
-                "div",
-                { staticClass: "text-center mb-6" },
-                [
-                  _c(
-                    "v-progress-circular",
-                    {
-                      attrs: {
-                        rotate: -90,
-                        size: 100,
-                        width: 15,
-                        value: _vm.countdownValue,
-                        color: _vm.progressColor
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n            " +
-                          _vm._s(_vm.secondsLeft) +
-                          "\n            "
-                      )
-                    ]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("p", { staticClass: "text-center" }, [
-                _vm._v(_vm._s(_vm.currentQuestion.question))
-              ]),
-              _vm._v(" "),
-              _c(
-                "v-row",
-                _vm._l(_vm.currentQuestion.answers, function(answer) {
-                  return _c(
-                    "v-col",
-                    {
-                      key: answer.id,
-                      staticClass: "text-center",
-                      attrs: { cols: "6" },
-                      on: {
-                        click: function($event) {
-                          return _vm.goToNextQuestion()
+      _c("v-card", { staticClass: "questions d-flex justify-center pa-6" }, [
+        _vm.questions
+          ? _c(
+              "div",
+              [
+                _c(
+                  "div",
+                  { staticClass: "text-center mb-6" },
+                  [
+                    _c(
+                      "v-progress-circular",
+                      {
+                        attrs: {
+                          rotate: -90,
+                          size: 100,
+                          width: 15,
+                          value: _vm.countdownValue,
+                          color: _vm.progressColor
                         }
-                      }
-                    },
-                    [
-                      _c(
-                        "v-btn",
-                        { attrs: { block: "", color: "secondary" } },
-                        [
-                          _vm._v(
-                            "\n                  " +
-                              _vm._s(answer.answer) +
-                              "\n                "
-                          )
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                }),
-                1
-              )
-            ],
-            1
-          )
-        : _vm._e()
-    ]
+                      },
+                      [
+                        _vm.answerConfirmationFeedback
+                          ? _c(
+                              "span",
+                              [
+                                _c("v-icon", [
+                                  _vm._v("mdi-checkbox-marked-circle")
+                                ])
+                              ],
+                              1
+                            )
+                          : _c("span", [
+                              _vm._v(
+                                "\n                    " +
+                                  _vm._s(_vm.secondsLeft) +
+                                  "\n                "
+                              )
+                            ])
+                      ]
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("p", { staticClass: "text-center" }, [
+                  _vm._v(_vm._s(_vm.currentQuestion.question))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "v-row",
+                  _vm._l(_vm.currentQuestion.answers, function(answer) {
+                    return _c(
+                      "v-col",
+                      {
+                        key: answer.id,
+                        staticClass: "text-center",
+                        attrs: { cols: "6" },
+                        on: {
+                          click: function($event) {
+                            return _vm.goToNextQuestion()
+                          }
+                        }
+                      },
+                      [
+                        _c(
+                          "v-btn",
+                          { attrs: { block: "", color: "secondary" } },
+                          [
+                            _vm._v(
+                              "\n                      " +
+                                _vm._s(answer.answer) +
+                                "\n                    "
+                            )
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  }),
+                  1
+                )
+              ],
+              1
+            )
+          : _vm._e()
+      ])
+    ],
+    1
   )
 }
 var staticRenderFns = []
