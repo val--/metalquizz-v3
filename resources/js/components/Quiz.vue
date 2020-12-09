@@ -1,23 +1,30 @@
 <template>
-	<div v-if="questions">
-        <div class="text-center">
-        <v-progress-circular
-          :rotate="-90"
-          :size="100"
-          :width="15"
-          :value="countdownValue"
-          :color="progressColor"
-        >
-        {{ secondsLeft }}
-        </v-progress-circular>
+    <v-card class="questions-container d-flex justify-center pa-6">
+    	<div v-if="questions">
+            <div class="text-center mb-6">
+                <v-progress-circular
+                  :rotate="-90"
+                  :size="100"
+                  :width="15"
+                  :value="countdownValue"
+                  :color="progressColor"
+                >
+                {{ secondsLeft }}
+                </v-progress-circular>
+            </div>
+            <p class="text-center">{{ currentQuestion.question}}</p>
+            <v-row>
+                <v-col cols="6" v-for="answer in currentQuestion.answers" :key="answer.id" @click="goToNextQuestion()" class="text-center">
+                    <v-btn
+                        block
+                        color="secondary"
+                    >
+                      {{ answer.answer }}
+                    </v-btn>
+                </v-col>
+            </v-row>
         </div>
-        <p>{{ currentQuestion.question}}</p>
-        <ul>
-            <li v-for="answer in currentQuestion.answers" :key="answer.id" @click="goToNextQuestion()">
-                {{ answer.answer }}
-            </li>
-        </ul>
-    </div>
+    </v-card>
 </template>
 
 <script>
@@ -79,7 +86,6 @@ export default {
             }else{
                 return 'primary';
             }
-            
         }
     },
     beforeDestroy () {
@@ -87,3 +93,11 @@ export default {
     },
 }
 </script>
+
+<style lang="scss" scoped>
+.questions-container {
+    ul {
+        list-style-type: none;
+    }
+}
+</style>
