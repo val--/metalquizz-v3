@@ -15,8 +15,9 @@ class Answer extends JsonResource
     public function toArray($request)
     {
          return[
+            'id' => $this->id,
             'answer' => $this->answer,
-            'is_right_answer' => $this->is_right_answer,
+            //'is_right_answer' => $this->is_right_answer, // must not be returned in api return
         ];
     }
 }

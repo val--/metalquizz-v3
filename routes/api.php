@@ -39,3 +39,5 @@ Route::post('question', 'QuestionController@store');
 Route::put('question', 'QuestionController@store');
 // Delete question
 Route::delete('question/{id}', 'QuestionController@destroy');
+// Checks if answer is correct
+Route::post('check_correct_answer', 'API\QuestionController@check_correct_answer');

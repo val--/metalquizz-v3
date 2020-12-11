@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class QuestionController extends Controller
 {
@@ -17,6 +18,15 @@ class QuestionController extends Controller
         $questions = \App\Question::inRandomOrder()->where('question_type_id', 1)->paginate(50);
         //$questions = Question::inRandomOrder()->where('question_type_id', 1)->all();
         return \App\Http\Resources\Question::collection($questions);
+    }
+
+    public function check_correct_answer(Request $request)
+    {
+        if(Crypt::decryptString($request->correct_answer_id) === $request->submitted_answer_id){
+             return response()->json($request, 200);
+        }else{
+             return response()->json($request, 400);
+        }
     }
 
     /**

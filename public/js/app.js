@@ -2222,12 +2222,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       state: 'starting',
       questions: null,
       currentQuestionIndex: 0,
+      score: 0,
       interval: {},
       countdownValue: 0,
       maxCountdownValue: 20,
@@ -2273,13 +2286,37 @@ __webpack_require__.r(__webpack_exports__);
         }
       }, 1000);
     },
+    checkIfAnswerIsCorrect: function checkIfAnswerIsCorrect(answer_id) {
+      var vm = this;
+      var formData = new FormData();
+      formData.append('submitted_answer_id', answer_id);
+      formData.append('correct_answer_id', this.currentQuestion.right_answer);
+      axios.post('/api/check_correct_answer', formData).then(function (data) {
+        vm.goToNextQuestion();
+      })["catch"](function (error) {
+        vm.endQuizz();
+      }); //return true;
+    },
     goToNextQuestion: function goToNextQuestion() {
       this.currentQuestionIndex++;
+      this.score += this.secondsLeft;
       clearInterval(this.interval);
       this.countdownValue = 0;
       this.answerConfirmationFeedback = 'OK';
       this.secondsLeft = this.maxCountdownValue;
       this.countdownTick();
+    },
+    endQuizz: function endQuizz() {
+      this.resetQuestionsAndTimer();
+      this.state = 'lost';
+    },
+    resetQuestionsAndTimer: function resetQuestionsAndTimer() {
+      this.secondsLeft = 0;
+      this.countdownValue = 0;
+      this.questions = null;
+    },
+    restartQuizz: function restartQuizz() {
+      location.reload(); // TODO
     }
   },
   computed: {
@@ -21229,7 +21266,7 @@ var render = function() {
     { staticClass: "questions-container" },
     [
       _c("v-card", { staticClass: "questions d-flex justify-center pa-6" }, [
-        _vm.questions
+        (_vm.questions && _vm.state === "starting") || _vm.state === "running"
           ? _c(
               "div",
               [
@@ -21287,7 +21324,7 @@ var render = function() {
                         attrs: { cols: "6" },
                         on: {
                           click: function($event) {
-                            return _vm.goToNextQuestion()
+                            return _vm.checkIfAnswerIsCorrect(answer.id)
                           }
                         }
                       },
@@ -21308,10 +21345,43 @@ var render = function() {
                     )
                   }),
                   1
+                ),
+                _vm._v(" "),
+                _c(
+                  "v-row",
+                  [
+                    _c("v-col", { staticClass: "mt-6" }, [
+                      _c("p", { staticClass: "text-center" }, [
+                        _vm._v("Votre score : " + _vm._s(_vm.score))
+                      ])
+                    ])
+                  ],
+                  1
                 )
               ],
               1
             )
+          : _vm.state === "lost"
+          ? _c("div", { staticClass: "text-center" }, [
+              _c("p", [_vm._v("Perdu ! ")]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Votre score est de " + _vm._s(_vm.score))]),
+              _vm._v(" "),
+              _c("p", [
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        return _vm.restartQuizz()
+                      }
+                    }
+                  },
+                  [_vm._v("Réessayer ?")]
+                )
+              ])
+            ])
           : _vm._e()
       ])
     ],
